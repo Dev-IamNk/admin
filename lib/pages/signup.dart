@@ -1,11 +1,10 @@
-import 'dart:async';
-import 'package:admin/service/auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:admin/pages/panel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import '../service/auth.dart';
 
 class adminSign extends StatefulWidget {
   const adminSign({super.key});
@@ -20,11 +19,13 @@ class _adminSignState extends State<adminSign> {
   TextEditingController pass = TextEditingController();
   EmailOTP myauth = EmailOTP();
 
-  List clgNames = ['PTU', 'SMVEC', 'MVIT', 'SVMC'];
+  List clgNames = ['PTU', 'SMVEC', 'MVIT', 'RGCET','MEC','DEMO'];
   List clgMails = [
-    'nandhaarasan@gmail.com',
-    'nandhakumarannkit@gmail.com',
-    'nandhaarasan@gmail.com',
+    'info@pec.edu',
+    'principal@smvec.ac.in',
+    'principal@mvit.edu.in',
+    'info@rgcetpdy.ac.in',
+    'principal@mailamengg.com',
     'nandhakumarannkit@gmail.com'
   ];
   List foundMatch = [];
@@ -91,6 +92,13 @@ class _adminSignState extends State<adminSign> {
                             } else if (clg.toLowerCase() == 'svmc') {
                               txtmail.text = clgMails[3];
                             }
+                            else if (clg.toLowerCase() == 'mec') {
+                              txtmail.text = clgMails[4];
+                            }
+                            else if (clg.toLowerCase() == 'demo') {
+                              txtmail.text = clgMails[5];
+                            }
+
                           });
                         },
                         child: Container(
@@ -126,24 +134,24 @@ class _adminSignState extends State<adminSign> {
                         ),
                       ),
                     ),
-                      onTap: () async {
-                        myauth.setConfig(
-                            appEmail: "nandhakumarannkit@gmail.com",
-                            appName: "Email OTP",
-                            userEmail: txtmail.text,
-                            otpLength: 6,
-                            otpType: OTPType.digitsOnly);
-                        if (await myauth.sendOTP() == true) {
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text("OTP has been sent"),
-                          ));
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text("Oops, OTP send failed"),
-                          ));
-                        }
-                      },
-                    ),
+                    onTap: () async {
+                      myauth.setConfig(
+                          appEmail: "nandhakumarannkit@gmail.com",
+                          appName: "Email OTP",
+                          userEmail: txtmail.text,
+                          otpLength: 6,
+                          otpType: OTPType.digitsOnly);
+                      if (await myauth.sendOTP() == true) {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("OTP has been sent"),
+                        ));
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Oops, OTP send failed"),
+                        ));
+                      }
+                    },
+                  ),
 
 
                   Center(
@@ -156,37 +164,37 @@ class _adminSignState extends State<adminSign> {
                   ),
                   Center(
                     child: TextButton(
-                      onPressed: () async {
-                        if (await myauth.verifyOTP(otp: otpController.text) == true) {
-                          Auth().signUp(email: txtmail.text, pass:'1234567890');
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>AdminPanel()));
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text("OTP is verified"),
-                          ));
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text("Invalid OTP"),
-                          ));
-                        }
-                      },
-                      child:InkWell(
-                        child:  Container(
-                          width: 150,
-                          height: 50,
-                          child: Card(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                            color: Colors.purple.shade100,
-                            elevation: 15,
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("Verify OTP ")
-                                ],
+                        onPressed: () async {
+                          if (await myauth.verifyOTP(otp: otpController.text) == true) {
+                            Auth().signUp(email: txtmail.text, pass:'1234567890');
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>AdminPanel()));
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                              content: Text("OTP is verified"),
+                            ));
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                              content: Text("Invalid OTP"),
+                            ));
+                          }
+                        },
+                        child:InkWell(
+                          child:  Container(
+                            width: 150,
+                            height: 50,
+                            child: Card(
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                              color: Colors.purple.shade100,
+                              elevation: 15,
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("Verify OTP ")
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ),)
+                          ),)
                     ),
                   ),
                 ],
